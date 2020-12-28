@@ -1,53 +1,49 @@
-from collections import defaultdict
-import math
 
-def inp(graph, edges, n):
+def inp(labels, edges, n):
+    
     for i in range(n):
-        input()
+        labels.append(input())
     m = int(input())
 
     for i in range(m):
         v_1, rate, v_2 = input().split(" ")
         rate = float(rate)
-        graph[v_1].append((v_2, rate))
         edges.append((v_1, v_2, rate))
 
-def hasNegativeCycle(graph, edges, n):
-    labels = list(graph.keys())
+def hasNegativeCycle(labels, edges, n):
     best_rates = dict.fromkeys(labels, 0)
     st = labels[0]
     best_rates[st] = 1
 
-    for _ in range(n + 5):
+    for _ in range(n):
         for (v_1, v_2, rate) in edges:
             best_rates[v_2] = max(best_rates[v_1] * rate, best_rates[v_2])
     
+    found = False
     for (v_1, v_2, rate) in edges:
         if best_rates[v_1] * rate > best_rates[v_2]:
-            return True
+            found = True
+            break
             
-    return False
-        
+    return found
 
 
 def main():
     
-    cnt = 0    
+    cnt = 0
     while True:
-        cnt += 1
         n = int(input())
         if n == 0:
             break
         
+        cnt += 1
         edges = []
-        graph = defaultdict(list)
-        inp(graph, edges, n)
-        graph = dict(graph)
+        labels = []
+        inp(labels, edges, n)
 
-        ans = hasNegativeCycle(graph, edges, n)
+        ans = hasNegativeCycle(labels, edges, n)
         print("Case ", cnt, ": Yes" if ans else ": No", sep="")
 
-        # consume trailing newline
         input()
 
 main()
